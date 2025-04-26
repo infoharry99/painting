@@ -31,12 +31,11 @@ class ProductController extends Controller
     
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $validate = $this->validate($request,[
             'title'=>'required',
             'summary'=>'required',
             'description'=>'nullable',
             'sold_by' => 'nullable',
-            'country' => 'nullable',
             'address_of_manufacture'=>'nullable',
             'name_of_address'=>'nullable',
             'photo'=>'required',
@@ -51,7 +50,6 @@ class ProductController extends Controller
             'price'=>'required|numeric',
             'discount'=>'nullable|numeric'
         ]);
-
         $data=$request->all();
         $slug=Str::slug($request->title);
         $count=Product::where('slug',$slug)->count();
@@ -112,17 +110,13 @@ class ProductController extends Controller
             'title'   => 'required',
             'summary' => 'required',
             'sold_by' => 'nullable',
-            'country' => 'nullable',
             'address_of_manufacture'=>'nullable',
             'name_of_address'=>'nullable',
             'description'=>'nullable',
             'photo'=>'required',
             'size'=>'nullable',
             'stock'=>"required|numeric",
-            'cat_id'=>'required|exists:categories,id',
-            'child_cat_id'=>'nullable|exists:categories,id',
             'is_featured'=>'sometimes|in:1',
-            'brand_id'=>'nullable|exists:brands,id',
             'status'=>'required|in:active,inactive',
             'condition'=>'required',
             'price'=>'required|numeric',

@@ -80,8 +80,9 @@
             <label for="size">Size</label>
             <select name="size[]" class="form-control selectpicker"  multiple data-live-search="true">
                 <option value="">--Select any size--</option>
-                <option value="S">25X16in</option>
-                <option value="M">36X36in</option>
+                <option value="25X16in">25X16in</option>
+                <option value="36X36in">36X36in</option>
+                <option value="36X36in">16X16in</option>
             </select>
         </div>
 
@@ -130,14 +131,14 @@
           <span class="text-danger">{{$message}}</span>
           @enderror
         </div>
-
+<!-- 
         <div class="form-group">
           <label for="country" class="col-form-label">Country <span class="text-danger">*</span></label>
           <input id="country" type="text" name="country" placeholder="Enter country"  value="{{old('country')}}" class="form-control">
           @error('country')
           <span class="text-danger">{{$message}}</span>
           @enderror
-        </div>
+        </div> -->
         
         <div class="form-group">
           <label for="sold_by" class="col-form-label">Sold By <span class="text-danger">*</span></label>

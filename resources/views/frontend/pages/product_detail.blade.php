@@ -67,6 +67,7 @@
                         <h4>{{$product_detail->title}}</h4>
                         <p><strong>Medium:</strong> Water colour on paper</p>
                     </div>
+                    {{dd($product_detail)}}
                     <div class="form-part">
                         <form>
                             <div class="form-group">

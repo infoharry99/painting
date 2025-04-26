@@ -39,7 +39,7 @@
         </div>
               {{-- {{$categories}} --}}
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="cat_id">Category <span class="text-danger">*</span></label>
           <select name="cat_id" id="cat_id" class="form-control">
               <option value="">--Select any category--</option>
@@ -47,20 +47,20 @@
                   <option value='{{$cat_data->id}}' {{(($product->cat_id==$cat_data->id)? 'selected' : '')}}>{{$cat_data->title}}</option>
               @endforeach
           </select>
-        </div>
+        </div> -->
         @php 
           $sub_cat_info=DB::table('categories')->select('title')->where('id',$product->child_cat_id)->get();
         // dd($sub_cat_info);
 
         @endphp
         {{-- {{$product->child_cat_id}} --}}
-        <div class="form-group {{(($product->child_cat_id)? '' : 'd-none')}}" id="child_cat_div">
+        <!-- <div class="form-group {{(($product->child_cat_id)? '' : 'd-none')}}" id="child_cat_div">
           <label for="child_cat_id">Sub Category</label>
           <select name="child_cat_id" id="child_cat_id" class="form-control">
               <option value="">--Select any sub category--</option>
               
           </select>
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label for="price" class="col-form-label">Price(NRS) <span class="text-danger">*</span></label>
@@ -81,19 +81,17 @@
           <label for="size">Size</label>
           <select name="size[]" class="form-control selectpicker"  multiple data-live-search="true">
               <option value="">--Select any size--</option>
-              @foreach($items as $item)              
-                @php 
-                $data=explode(',',$item->size);
-                // dd($data);
-                @endphp
-              <option value="S"  @if( in_array( "S",$data ) ) selected @endif>Small</option>
-              <option value="M"  @if( in_array( "M",$data ) ) selected @endif>Medium</option>
-              <option value="L"  @if( in_array( "L",$data ) ) selected @endif>Large</option>
-              <option value="XL"  @if( in_array( "XL",$data ) ) selected @endif>Extra Large</option>
-              @endforeach
+                @foreach($items as $item)              
+                  @php 
+                    $data=explode(',',$item->size);
+                  @endphp
+                  <option value="25X16in"  @if( in_array( "25X16in",$data ) ) selected @endif>25X16in</option>
+                  <option value="36X36in"  @if( in_array( "36X36in,$data ) ) selected @endif>36X36in</option>
+                  <option value="36X36in" @if( in_array( "16X16in",$data ) ) selected @endif>16X16in</option>
+                @endforeach
           </select>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="brand_id">Brand</label>
           <select name="brand_id" class="form-control">
               <option value="">--Select Brand--</option>
@@ -101,35 +99,27 @@
               <option value="{{$brand->id}}" {{(($product->brand_id==$brand->id)? 'selected':'')}}>{{$brand->title}}</option>
              @endforeach
           </select>
-        </div>
+        </div> -->
 
         <div class="form-group">
           <label for="condition">Condition</label>
           <select name="condition" class="form-control">
               <option value="default" {{(($product->condition=='default')? 'selected':'')}}>Default</option>
               <option value="new" {{(($product->condition=='new')? 'selected':'')}}>New</option>
-              <option value="hot" {{(($product->condition=='hot')? 'selected':'')}}>Hot</option>
-              <option value="best_seller" {{(($product->condition=='best_seller')? 'selected':'')}}>Best Seller</option>
-              <option value="shop_the_look" {{(($product->condition=='shop_the_look')? 'selected':'')}}>SHOP THE LOOK</option>
-              <option value="litclub" {{(($product->condition=='litclub')? 'selected':'')}}>LITCLUB</option>
+              <option value="popular" {{(($product->condition=='popular')? 'selected':'')}}>Popular Paninting</option>
           </select>
         </div>
 
         <div class="form-group">
           <label for="stock">Quantity <span class="text-danger">*</span></label>
-          <input id="quantity" type="number" name="stock" min="0" placeholder="Enter quantity"  value="{{$product->stock}}" class="form-control">
-          @error('stock')
-          <span class="text-danger">{{$message}}</span>
-          @enderror
+            <input id="quantity" type="number" name="stock" min="0" placeholder="Enter quantity"  value="{{$product->stock}}" class="form-control">
+            @error('stock')
+              <span class="text-danger">{{$message}}</span>
+            @enderror
         </div>
         <div class="form-group">
           <label for="inputPhoto" class="col-form-label">Photo <span class="text-danger">*</span></label>
           <div class="input-group">
-              <!-- <span class="input-group-btn">
-                  <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary text-white">
-                  <i class="fas fa-image"></i> Choose
-                  </a>
-              </span> -->
               <input id="thumbnail" class="form-control" type="file" name="photo[]" value="{{$product->photo}}" multiple>
           </div>
         <div id="holder" style="margin-top:15px;max-height:100px;"></div>
@@ -138,13 +128,13 @@
           @enderror
         </div>
         
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="country" class="col-form-label">Country <span class="text-danger">*</span></label>
           <input id="country" type="text" name="country" placeholder="Enter country"  value="{{$product->country}}" class="form-control">
           @error('country')
           <span class="text-danger">{{$message}}</span>
           @enderror
-        </div>
+        </div> -->
         
         <div class="form-group">
           <label for="sold_by" class="col-form-label">Sold By <span class="text-danger">*</span></label>

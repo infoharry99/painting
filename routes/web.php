@@ -15,6 +15,7 @@
     use App\Http\Controllers\PayPalController;
     use App\Http\Controllers\NotificationController;
     use App\Http\Controllers\HomeController;
+    use App\Http\Controllers\TestmonialController;
     use \UniSharp\LaravelFilemanager\Lfm;
 
     // CACHE CLEAR ROUTE
@@ -144,6 +145,7 @@
         Route::resource('brand', 'BrandController');
         Route::resource('/terms', 'TermsController');
         Route::resource('/about', 'AboutusController');
+        Route::resource('/testmonial', 'TestmonialController');
         // Profile
         Route::get('/profile', [AdminController::class, 'profile'])->name('admin-profile');
         Route::post('/profile/{id}', [AdminController::class, 'profileUpdate'])->name('profile-update');

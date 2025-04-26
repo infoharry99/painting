@@ -301,7 +301,7 @@
             <div class="col-lg-12">
                 <div class="section-heading position-relative">
                     <h3 class="text-center mb-5">@lang('home.latest_blog')</h3>
-                    <a href="#" class="view-all">@land('home.view_all')</a>
+                    <a href="#" class="view-all">@lang('home.view_all')</a>
                 </div>
             </div>
             @if($posts)

@@ -6,8 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Cart;
 class Product extends Model
 {
-    protected $fillable=['title','slug','summary','description','url','sold_by','country','name_of_manufacture','address_of_manufacture','cat_id','child_cat_id','price','brand_id','discount','status','photo','size','stock','is_featured','condition'];
+    protected $fillable=['title','slug','summary','Medium','print_medium','canvas_type','description','url','sold_by','country','name_of_manufacture','address_of_manufacture','cat_id','child_cat_id','price','brand_id','discount','status','photo','size','stock','is_featured','condition'];
 
+
+    public function likes() {
+        return $this->hasMany(Like::class);
+    }
+    
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
     public function cat_info(){
         return $this->hasOne('App\Models\Category','id','cat_id');
     }

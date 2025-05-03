@@ -75,7 +75,7 @@ class TestmonialController extends Controller
 
     public function destroy($id)
     {
-        $category = About::findOrFail($id);
+        $category = Testmonial::findOrFail($id);
         $status   = $category->delete();
 
         if($status){

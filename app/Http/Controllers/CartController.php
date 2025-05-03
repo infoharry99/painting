@@ -85,7 +85,6 @@ class CartController extends Controller
             $already_cart->save();
             
         }else{
-            
             $cart = new Cart;
             $cart->user_id = auth()->user()->id;
             $cart->product_id = $product->id;

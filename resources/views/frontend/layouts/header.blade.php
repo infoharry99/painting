@@ -129,13 +129,6 @@
                             <option value="en" {{ app()->getLocale() == 'en' ? 'selected' : '' }}>@lang('home.english')</option>
                             <option value="bn" {{ app()->getLocale() == 'bn' ? 'selected' : '' }}>@lang('home.bengali')</option>
                         </select>
-
-                        <!-- <a href="{{ url('lang/hi') }}" class="lang-code me-2 {{ app()->getLocale() == 'hi' ? 'fw-bold text-primary' : '' }}">HN</a>
-                        <a href="{{ url('lang/en') }}" class="lang-code me-3 {{ app()->getLocale() == 'en' ? 'fw-bold text-primary' : '' }}">EN</a>
-                        <a href="#">
-                            <img src="{{ asset('images/search.png') }}" class="icon-img me-3" alt="Search">
-                        </a> -->
-
                         <ul class="list-inline mb-0">
                             @auth
                                 @if(Auth::user()->role === 'admin')

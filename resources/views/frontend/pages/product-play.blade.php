@@ -6,6 +6,7 @@
     .sc-button-group .sc-button-download .soundHeader{ 
         display:none !important;
     }
+    
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8z4+2e5c7e5a5b5e5a5b5e5a5b5e5a5b5e5" crossorigin="anonymous" />
     <script src="https://w.soundcloud.com/player/api.js"></script>
@@ -55,7 +56,16 @@
                             style="z-index: 1; position: relative;">
                         </iframe>
                     </div>
-                   <div style="margin-top: 10px;">
+                   {{-- <div style="margin-top: 10px;">
+                        <button id="playBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
+                            <img id="playIcon" src="{{ asset('images/Prplay.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Play
+                        </button>
+
+                        <button id="pauseBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
+                            <img id="pauseIcon" src="{{ asset('images/play.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Pause
+                        </button>
+                    </div> --}}
+                    <div style="margin-top: 10px;">
                         <button id="playBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
                             <img id="playIcon" src="{{ asset('images/Prplay.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Play
                         </button>
@@ -94,9 +104,12 @@
 
                <div class="product-play-share mt-5">
                    <div class="social-links">
-                       <ul>
-                           <li><button><img src="{{asset('images/chat.png')}}" class="img-fluid"><span> 120</span></button></li>
+                    {{-- <div> --}}
+                       <ul >
+                           <a href="" style="display: flex; gap:20px;">
+                            <li><button><img src="{{asset('images/chat.png')}}" class="img-fluid"><span> 120</span></button></li>
                            <li><button><img src="{{asset('images/heart.png')}}" class="img-fluid"> <span> 89</span></button></li>
+                           </a>
                            <li><a href=""><img src="{{asset('images/facebook.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/instra.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/pin.png')}}" class="img-fluid"></a></li>
@@ -206,30 +219,49 @@
   @endsection
   
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const iframeElement = document.getElementById('sc-player');
+    //     const widget = SC.Widget(iframeElement);
+
+    //     document.getElementById('playBtn').addEventListener('click', function () {
+    //         widget.play();
+    //     });
+
+    //     document.getElementById('pauseBtn').addEventListener('click', function () {
+    //         widget.pause();
+    //     });
+
+    //     document.getElementById('stopBtn').addEventListener('click', function () {
+    //         widget.seekTo(0); 
+    //         widget.pause();   
+    //     });
+    //     playBtn.addEventListener('click', function () {
+    //         widget.play();
+    //         pauseIcon.src = "{{ asset('images/Vector.png') }}"; 
+    //     });
+
+    //     pauseBtn.addEventListener('click', function () {
+    //         widget.pause();
+    //         pauseIcon.src = "{{ asset('images/Prplay.png') }}"; 
+    //     });
+    // });
+      document.addEventListener("DOMContentLoaded", function () {
         const iframeElement = document.getElementById('sc-player');
         const widget = SC.Widget(iframeElement);
 
-        document.getElementById('playBtn').addEventListener('click', function () {
-            widget.play();
-        });
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
 
-        document.getElementById('pauseBtn').addEventListener('click', function () {
-            widget.pause();
-        });
-
-        document.getElementById('stopBtn').addEventListener('click', function () {
-            widget.seekTo(0); 
-            widget.pause();   
-        });
         playBtn.addEventListener('click', function () {
             widget.play();
-            pauseIcon.src = "{{ asset('images/Vector.png') }}"; 
+            playIcon.src = "{{ asset('images/Vector.png') }}"; // Change play button to pause icon
         });
 
         pauseBtn.addEventListener('click', function () {
             widget.pause();
-            pauseIcon.src = "{{ asset('images/Prplay.png') }}"; 
+            playIcon.src = "{{ asset('images/Prplay.png') }}"; // Change play button back to play icon
         });
     });
 </script>

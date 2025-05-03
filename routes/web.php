@@ -15,6 +15,7 @@
     use App\Http\Controllers\PayPalController;
     use App\Http\Controllers\NotificationController;
     use App\Http\Controllers\HomeController;
+    use App\Http\Controllers\ProductInteractionController;
     use App\Http\Controllers\TestmonialController;
     use \UniSharp\LaravelFilemanager\Lfm;
 
@@ -189,8 +190,16 @@
     Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
         Route::get('/', [HomeController::class, 'index'])->name('user');
         // Profile
+
+        //like and comment
+        Route::post('/product/{id}/like', [ProductInteractionController::class, 'like'])->name('product.like');
+        Route::post('/product/{id}/comment', [ProductInteractionController::class, 'comment'])->name('product.comment');
+        Route::post('/product/{id}/comment', [ProductInteractionController::class, 'store'])->name('product.comment');
+        Route::get('/product/{id}/comments', [ProductInteractionController::class, 'commentPage'])->name('product.comment.page');
+
         Route::get('/profile', [HomeController::class, 'profile'])->name('user-profile');
         Route::post('/profile/{id}', [HomeController::class, 'profileUpdate'])->name('user-profile-update');
+        
         //  Order
         Route::get('/order', "HomeController@orderIndex")->name('user.order.index');
         Route::get('/order/show/{id}', "HomeController@orderShow")->name('user.order.show');

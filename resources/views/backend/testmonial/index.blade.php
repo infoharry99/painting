@@ -9,8 +9,8 @@
          </div>
      </div>
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary float-left">About us Lists</h6>
-      <a href="{{route('about.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Terms</a>
+      <h6 class="m-0 font-weight-bold text-primary float-left">Testmonial Lists</h6>
+      <a href="{{route('testmonial.create')}}" class="btn btn-primary btn-sm float-right" data-toggle="tooltip" data-placement="bottom" title="Add User"><i class="fas fa-plus"></i> Add Terms</a>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -20,7 +20,7 @@
               <tr>
                 <th>S.N.</th>
                 <th>Title</th>
-                <th>About Us</th>
+                <th>Testmonial Us</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -28,7 +28,7 @@
               <tr>
                 <th>S.N.</th>
                 <th>Title</th>
-                <th>About Us</th>
+                <th>Testmonial Us</th>
                 <th>Action</th>
               </tr>
             </tfoot>
@@ -42,9 +42,9 @@
                       <td>{{$category->title}}</td>
                       <td>{{$category->summary}}</td>
                       <td>
-                          <a href="{{route('about.edit',$category->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom">
+                          <a href="{{route('testmonial.edit',$category->id)}}" class="btn btn-primary btn-sm float-left mr-1" style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" title="edit" data-placement="bottom">
                           <i class="fas fa-edit"></i></a>
-                          <form method="POST" action="{{route('about.destroy',[$category->id])}}">
+                          <form method="POST" action="{{route('testmonial.destroy',[$category->id])}}">
                             @csrf
                             @method('delete')
                             <button class="btn btn-danger btn-sm dltBtn" data-id={{$category->id}} style="height:30px; width:30px;border-radius:50%" data-toggle="tooltip" data-placement="bottom" title="Delete">

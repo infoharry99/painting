@@ -32,6 +32,11 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 <link rel="stylesheet" href="{{asset('/frontend/css/style.css')}}">
 <link rel="stylesheet" href="{{asset('/frontend/css/responstive.css')}}">
+
+
+
+
+
 <!-- <script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=5f2e5abf393162001291e431&product=inline-share-buttons' async='async'></script> -->
 <style>
     /* Multilevel dropdown */

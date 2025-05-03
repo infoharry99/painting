@@ -5,7 +5,7 @@
 <div class="card">
     <h5 class="card-header">Add Testimonial</h5>
     <div class="card-body">
-      <form method="post" action="{{route('about.store')}}" enctype="multipart/form-data">
+      <form method="post" action="{{route('testmonial.store')}}" enctype="multipart/form-data">
         {{csrf_field()}}
         <div class="form-group">
           <label for="inputTitle" class="col-form-label">Name <span class="text-danger">*</span></label>
@@ -15,12 +15,21 @@
           @enderror
         </div>
 
+        {{-- //description --}}
         <div class="form-group">
           <label for="description" class="col-form-label">Description</label>
           <textarea class="form-control" id="description" name="description">{{old('description')}}</textarea>
           @error('description')
           <span class="text-danger">{{$message}}</span>
           @enderror
+        </div>
+        {{-- //image --}}
+        <div class="form-group">
+              <label for="image" class="col-form-label">Image</label>
+              <input type="file" class="form-control" id="image" name="image">
+              @error('image')
+              <span class="text-danger">{{$message}}</span>
+              @enderror
         </div>
         <div class="form-group mb-3">
           <button type="reset" class="btn btn-warning">Reset</button>

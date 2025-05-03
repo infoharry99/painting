@@ -25,6 +25,35 @@
         </div>
 
         <div class="form-group">
+          <label for="shipping" class="col-form-label">Shipping <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="shipping" name="shipping">{{$data->shipping}}</textarea>
+          @error('shipping')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="form-group">
+          <label for="warrenty" class="col-form-label">Warrenty <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="warrenty" name="warrenty">{{$data->warrenty}}</textarea>
+          @error('warrenty')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="form-group">
+          <label for="payment" class="col-form-label">Payment <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="payment" name="payment">{{$data->payment}}</textarea>
+          @error('payment')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="form-group">
+          <label for="return" class="col-form-label">Return <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="return" name="return">{{$data->return}}</textarea>
+          @error('return')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
           <label for="inputPhoto" class="col-form-label">Logo <span class="text-danger">*</span></label>
           <div class="input-group">
               <span class="input-group-btn">
@@ -120,6 +149,34 @@
     $(document).ready(function() {
       $('#description').summernote({
         placeholder: "Write detail description.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#shipping').summernote({
+        placeholder: "Write detail shipping.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#warrenty').summernote({
+        placeholder: "Write detail warrenty.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#payment').summernote({
+        placeholder: "Write detail payment.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#return').summernote({
+        placeholder: "Write detail return.....",
           tabsize: 2,
           height: 150
       });

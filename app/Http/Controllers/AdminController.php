@@ -58,6 +58,10 @@ class AdminController extends Controller
         $this->validate($request,[
             'short_des'=>'required|string',
             'description'=>'required|string',
+            'shipping'=>'required|string',
+            'warrenty'=>'required|string',
+            'payment'=>'required|string',
+            'return'=>'required|string',
             'photo'=>'required',
             'logo'=>'required',
             'address'=>'required|string',

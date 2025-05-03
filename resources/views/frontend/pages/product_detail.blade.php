@@ -1,4 +1,5 @@
 
+
 @extends('frontend.layouts.master')
 @section('title','E-Paninting || HOME PAGE')
 @section('main-content')
@@ -7,7 +8,123 @@
     display: flex;
 	
 }
+
+     .dropdown {
+            border-radius: 10px;
+            position: relative;
+            display: inline-block;
+            width: 200px;
+            cursor: pointer;
+            padding: 10px;
+           
+            border: 1px solid #ccc;
+            background-color: #fff;
+        }
+
+        .dropdown-content {
+            margin-top: 20px;
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            width: 200px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content div {
+            padding: 10px;
+
+            cursor: pointer;
+        }
+
+        .dropdown-content div:hover {
+            background-color: #ddd;
+        }
+
+        /* Show dropdown when the dropdown is in focus */
+        .dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+
+        /* Optional: Add a transition for smooth opening and closing */
+        .dropdown-content {
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+
+        .dropdown:focus-within .dropdown-content {
+            opacity: 1;
+        }
+
+        .dropdown span {
+            font-size: 16px;
+        }
 	</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+        // Select elements
+        const currencyDropdown = document.getElementById('currencyDropdown');
+        const priceText = document.getElementById('priceText');
+        const dropdownContent = currencyDropdown.querySelector('.dropdown-content');
+        const dropdownSpan = currencyDropdown.querySelector('span');
+        
+        const originalPrice = 100; // Manually set custom price
+
+        const conversionRates = {
+            USD: 1,
+            INR: 83,
+            EUR: 0.93,
+            GBP: 0.8,
+            AUD: 1.5,
+            CAD: 1.35,
+            JPY: 155,
+            CNY: 7.2,
+            AED: 3.67,
+            CHF: 0.91
+        };
+
+        const currencySymbols = {
+            USD: '$',
+            INR: '₹',
+            EUR: '€',
+            GBP: '£',
+            AUD: 'A$',
+            CAD: 'C$',
+            JPY: '¥',
+            CNY: '¥',
+            AED: 'د.إ',
+            CHF: 'CHF'
+        };
+
+        // Update price based on selected currency
+        function updatePrice(selectedCurrency) {
+            const rate = conversionRates[selectedCurrency];
+            const symbol = currencySymbols[selectedCurrency];
+            const convertedPrice = (originalPrice * rate).toFixed(2);
+
+            priceText.innerHTML = `${symbol}${convertedPrice}`;
+        }
+
+        // Handle currency selection
+        dropdownContent.addEventListener('click', function (e) {
+            if (e.target && e.target.matches('div[data-currency]')) {
+                const selectedCurrency = e.target.getAttribute('data-currency');
+                dropdownSpan.innerHTML = e.target.innerHTML; // Update selected value
+                updatePrice(selectedCurrency);
+                // Dropdown will automatically close due to CSS :focus-within rule
+            }
+        });
+
+        // Initialize with default value
+        updatePrice('USD');
+    });
+</script>
+
+
+
+
+
         <!-- subbanner sec start -->
     <section class="subbanner-sec sectionpadding">
         <div class="container">
@@ -65,27 +182,31 @@
                     </div>
                     <div class="product-heading">
                         <h4>{{$product_detail->title}}</h4>
-                        <p><strong>Medium:</strong> Water colour on paper</p>
+                        <p><strong>Medium:</strong> {{$product_detail->Medium}}</p>
                     </div>
-                    {{dd($product_detail)}}
                     <div class="form-part">
                         <form>
                             <div class="form-group">
                                 <label>Print Medium</label>
                                 <select class="form-select">
-                                    <option>Canvas</option>
+                                    <option> {{$product_detail->print_medium}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Canvas Type</label>
                                 <select class="form-select">
-                                    <option>Glossy</option>
+                                    <option> {{$product_detail->canvas_type}}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Print Size</label>
-                                <select class="form-select">
-                                    <option>25.5 cm X 16.6 cm</option>
+                                <select class="form-select">           
+                                    @php 
+                                        $sizes = explode(',', $product_detail->size);
+                                    @endphp
+                                    @foreach($sizes as $size)
+                                        <option value="{{ $size }}">{{ $size }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="form-group">
@@ -94,30 +215,51 @@
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
                                 </select>
                             </div>
                             <div class="currency-area">
-                                    <div>
-                                        <div class="country">
-                                            <select class="form-select">
-                                                <option>Currency</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="cost-area">
-                                            <p><strong>Cost</strong> (Including Shipping):</p> <h3>${{$product_detail->price}}</h3>
-                                        </div>
-                                    </div>
+                <!-- Currency dropdown -->
+                <div id="currencyDropdown" class="dropdown" tabindex="0">
+                    <span>Dollar ($)</span>
+                    <div class="dropdown-content">
+                        <div data-currency="USD">Dollar ($)</div>
+                        <div data-currency="INR">Rupee (₹)</div>
+                        <div data-currency="EUR">Euro (€)</div>
+                        <div data-currency="GBP">British Pound (£)</div>
+                        <div data-currency="AUD">Australian Dollar (A$)</div>
+                        <div data-currency="CAD">Canadian Dollar (C$)</div>
+                        <div data-currency="JPY">Japanese Yen (¥)</div>
+                        <div data-currency="CNY">Chinese Yuan (¥)</div>
+                        <div data-currency="AED">UAE Dirham (د.إ)</div>
+                        <div data-currency="CHF">Swiss Franc (CHF)</div>
+                    </div>
+                </div>
+
+<!-- Price display -->
+<div class="cost-area" style="margin-top: 10px;">
+        <p><strong>Cost</strong> (Including Shipping):</p>
+        <h3 id="priceText"></h3> <!-- Price will update here -->
+</div>
+
+
+
+{{-- <div>
+    <div class="cost-area" style="margin-top: 10px;">
+        <p><strong>Cost</strong> (Including Shipping):</p>
+        <h3 id="priceText"></h3> <!-- Price will update here -->
+    </div>
+</div> --}}
                             </div>
                             <div class="postcode-area">
-                                <div>
+                                <!-- <div>
                                     <div class="country">
-                                            <select class="form-select">
-                                                <option>Currency</option>
-                                            </select>
-                                        </div>
-                                </div>
+                                        <select class="form-select">
+                                            <option>Currency</option>
+                                        </select>
+                                    </div>
+                                </div> -->
                                 <div class="postcode-fild">
                                     <input type="text" placeholder="Postal Code" name="">
                                 </div>
@@ -127,7 +269,7 @@
                             </div>
 
                             <div class="cart-area">
-                                <div class="wistlist-btn">
+                                <div class="cart-box mr-2">
                                     <a href="{{route('add-to-wishlist',$product_detail->slug)}}">Add To Wistlist</a>
                                 </div>
                                 <div class="cart-box">
@@ -148,6 +290,12 @@
    </section>
    <!-- product-details sec end -->
 
+@php
+     $setting_data = DB::table('settings')->orderBy('id','DESC')->first();
+
+ @endphp
+
+
    <!-- product description sec start -->
    <section class="produt-description padding-bottom">
        <div class="container">
@@ -159,19 +307,19 @@
                   <button class="tablinks" onclick="openCity(event, 'Tokyo')">Payment</button>
                   <button class="tablinks" onclick="openCity(event, 'Tokyo1')">Return</button>
                 </div>
-                <div id="London" class="tabcontent" style="display: block;">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the </p>
+                <div id="London" class="tabcontent" style="display: block;">    
+                      <p>{{$setting_data->shipping}}</p>
                 </div>
 
-                <div id="Paris" class="tabcontent">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the </p> 
+                 <div id="Paris" class="tabcontent">
+                        <p>{{$setting_data->warrenty}}</p>
                 </div>
 
                 <div id="Tokyo" class="tabcontent">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the </p>
+                        <p>{{$setting_data->payment}}</p>
                 </div>
                 <div id="Tokyo1" class="tabcontent">
-                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the </p>
+                        <p>{{$setting_data->return}}</p>
                 </div>
             </div>
         </div>
@@ -335,4 +483,9 @@
   </section>
   <!-- sequere sec end  -->
 
+
+
+
 @endsection
+
+

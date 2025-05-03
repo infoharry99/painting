@@ -1,9 +1,25 @@
 @extends('frontend.layouts.master')
 @section('title', __('home.title')) {{-- Translatable title --}}
 @section('main-content')
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+  <style>
+    .swiper {
+      width: 100%;
+      height: 100vh;
+    }
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
 
+      /* Center slide content vertically */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 @if(count($banners) > 0)
-    <section id="Gslider" class="carousel slide" data-ride="carousel">
+    <!-- <section id="Gslider" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             @foreach($banners as $key => $banner)
                 <li data-target="#Gslider" data-slide-to="{{ $key }}" class="{{ $key == 0 ? 'active' : '' }}"></li>
@@ -28,8 +44,49 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">@lang('home.next')</span>
         </a>
-    </section>
+    </section> -->
 @endif
+<div class="swiper mySwiper">
+  <div class="swiper-wrapper">
+    {{-- @foreach($banners as $banner) --}}
+    <div class="swiper-slide" style="position: relative;">
+      <img src="/images/banner.png" alt="Banner Image" style="width: 100%; height: 100vh; object-fit: cover;">
+    <div style="position: absolute; top: 50%; left: 40px; transform: translateY(-50%); color: white; max-width: 600px;">
+       <h1 style="font-size: 3.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 0.5rem;color: white">Lorem Ipsum is</h1>
+       <p style="font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;color: white">dummy text of the printing <br> and type setting industry.</p>
+       <p style="font-size: 1rem; font-weight: 300; max-width: 24rem;color: white">dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever</p>
+    </div>
+    </div>
+
+    <div class="swiper-slide" style="position: relative;">
+      <img src="/images/product-img.png" alt="Banner Image" style="width: 100%; height: 100vh; object-fit: cover;">
+    <div style="position: absolute; top: 50%; left: 40px; transform: translateY(-50%); color: white; max-width: 600px;">
+        <h1 style="font-size: 3.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 0.5rem;color: white">Lorem Ipsum is</h1>
+        <p style="font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;color: white">dummy text of the printing <br> and type setting industry.</p>
+        <p style="font-size: 1rem; font-weight: 300; max-width: 24rem;color: white">dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever</p>
+    </div>
+    </div>
+    {{-- @endforeach --}}
+  </div>
+
+  <!-- Add Pagination -->
+  <div class="swiper-pagination"></div>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+  var swiper = new Swiper(".mySwiper", {
+    loop: true,
+    pagination: {
+      el: ".swiper-pagination",
+      clickable: true,
+    },
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+  });
+</script>
 @php
     $locale = app()->getLocale();
   
@@ -80,14 +137,27 @@
                                         {{-- <img src="{{$photo[0]}}" alt="{{$photo[0]}}" class="img-fluid"> --}}
                                     </div>
                                     <div class="featured-content">
-                                        <!-- <p>{{$data->cat_info['title']}}</p> -->
                                         <h3>{{$data->title}} </h3>
                                         <a href="{{route('product-detail',$data->slug)}}">Shop Now</a>
                                     </div>
                                 </a>
                                 <div class="featured-attribute mt-3">
-                                    <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                    <button class="comment"><i class="far fa-comment"></i>89</button>
+                                    <form method="POST" action="{{ route('product.like', $data->id) }}" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="hearts">
+                                            @if($data->likes->contains('user_id', auth()->id()))
+                                                <i class="fas fa-heart"></i>
+                                            @else
+                                                <i class="far fa-heart"></i>
+                                            @endif
+                                            {{ $data->likes->count() }}
+                                        </button>
+                                    </form>
+
+                                    <!-- Comment Count Button -->
+                                    <button class="comment">
+                                        <i class="far fa-comment"></i> {{ $data->comments->count() }}
+                                    </button>
                                 </div>
                             </div>
                         @endforeach
@@ -108,9 +178,14 @@
                 </div>
             </div>
                <div class="featured-slider owl-carousel">
-                    @php
+                    <!-- @php
                         $product_listss = DB::table('products')->where('status','active')->orderBy('id','DESC')->limit(6)->get();
-                    @endphp
+                    @endphp -->
+
+                    @php
+                        use App\Models\Product;
+                        $product_listss = Product::with(['likes', 'comments'])->where('status', 'active')->orderBy('id', 'DESC')->limit(6)->get();
+                    @endphp                  
                     @foreach($product_listss as $product)
                         <div class="featured-item">
                             <a href="#">
@@ -130,10 +205,43 @@
                                 </div>
                             </a>
                             <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                                    <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="hearts">
+                                            @if($product->likes->contains('user_id', auth()->id()))
+                                                <i class="fas fa-heart"></i>
+                                            @else
+                                                <i class="far fa-heart"></i>
+                                            @endif
+                                            {{ $product->likes->count() }}
+                                        </button>
+                                    </form>
+
+                                    <!-- Comment Count Button -->
+                                    <button class="comment">
+                                        <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                                            <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                                        </a>
+                                        <!-- <i class="far fa-comment"></i> {{ $product->comments->count() }} -->
+                                        <!-- <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                                            <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                                        </a> -->
+                                    </button>
                             </div>
                         </div>
+                        <!-- <form method="POST" action="{{ route('product.comment', $product->id) }}">
+                            @csrf
+                            <textarea name="comment" placeholder="Write a comment..." required></textarea>
+                            <button type="submit">Post</button>
+                        </form> -->
+
+                        <!-- Comment List -->
+                        <!-- @foreach($product->comments as $comment)
+                            <div>
+                                <strong>{{ $comment->user->name }}:</strong> 
+                                <p>{{ $comment->comment }}</p>
+                            </div>
+                        @endforeach -->
                     @endforeach                                                                            
                </div>
            </div>
@@ -143,7 +251,7 @@
    <!-- popular sec end -->
 
    <!-- testimonial sec start -->
-  <section class="testimonial-sec sectionpadding">
+    <section class="testimonial-sec sectionpadding">
        <div class="container">
            <div class="row">
             <div class="col-lg-2"></div>
@@ -175,119 +283,7 @@
                                </div>
                            </div>
                        </div>
-                       <div class="testi-item">
-                           <div class="row">
-                               <div class="col-lg-2">
-                                   <div class="testi-img">
-                                       <img src="images/image 10.png" class="img-fluid">
-                                   </div>
-                               </div>
-                               <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                               </div>                                   
-                               </div>
-                               <div class="col-lg-9">
-                               </div>
-                               <div class="col-lg-3">
-                                 <div class="test-hed mt-4">
-                                    <h6><strong>Rakesh Kumer</strong></h6>
-                                    <p>Desinassion</p>
-                                </div>
-                               </div>
-                           </div>
-
-                       </div>
-                       <div class="testi-item">
-                           <div class="row">
-                               <div class="col-lg-2">
-                                   <div class="testi-img">
-                                       <img src="images/image 10.png" class="img-fluid">
-                                   </div>
-                               </div>
-                               <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                               </div>                                   
-                               </div>
-                               <div class="col-lg-9">
-                               </div>
-                               <div class="col-lg-3">
-                                 <div class="test-hed mt-4">
-                                    <h6><strong>Rakesh Kumer</strong></h6>
-                                    <p>Desinassion</p>
-                                </div>
-                               </div>
-                           </div>
-
-                       </div>
-                       <div class="testi-item">
-                           <div class="row">
-                               <div class="col-lg-2">
-                                   <div class="testi-img">
-                                       <img src="images/image 10.png" class="img-fluid">
-                                   </div>
-                               </div>
-                               <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                               </div>                                   
-                               </div>
-                               <div class="col-lg-9">
-                               </div>
-                               <div class="col-lg-3">
-                                 <div class="test-hed mt-4">
-                                    <h6><strong>Rakesh Kumer</strong></h6>
-                                    <p>Desinassion</p>
-                                </div>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="testi-item">
-                           <div class="row">
-                               <div class="col-lg-2">
-                                   <div class="testi-img">
-                                       <img src="images/image 10.png" class="img-fluid">
-                                   </div>
-                               </div>
-                               <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                               </div>                                   
-                               </div>
-                               <div class="col-lg-9">
-                               </div>
-                               <div class="col-lg-3">
-                                 <div class="test-hed mt-4">
-                                    <h6><strong>Rakesh Kumer</strong></h6>
-                                    <p>Desinassion</p>
-                                </div>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="testi-item">
-                           <div class="row">
-                               <div class="col-lg-2">
-                                   <div class="testi-img">
-                                       <img src="images/image 10.png" class="img-fluid">
-                                   </div>
-                               </div>
-                               <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                               </div>                                   
-                               </div>
-                               <div class="col-lg-9">
-                               </div>
-                               <div class="col-lg-3">
-                                 <div class="test-hed mt-4">
-                                    <h6><strong>Rakesh Kumer</strong></h6>
-                                    <p>Desinassion</p>
-                                </div>
-                               </div>
-                           </div>
-
-                       </div>                                                                                                                   
+                                                                                                                                          
                    </div>
               </div>
        </div>
@@ -295,7 +291,7 @@
    <!-- testimonial sec end -->
 
      <!-- blog sec start -->
-     <section class="blog-sec sectionpadding">
+    <section class="blog-sec sectionpadding">
        <div class="container">
            <div class="row">
             <div class="col-lg-12">
@@ -331,7 +327,7 @@
                </div>                --}}
            </div>
        </div>
-   </section>
+    </section>
    <!-- blog sec end -->
 
 

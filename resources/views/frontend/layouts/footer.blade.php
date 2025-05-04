@@ -275,7 +275,7 @@
 	<script src="{{asset('frontend/js/magnific-popup.js')}}"></script>
 	<script src="{{asset('frontend/js/waypoints.min.js')}}"></script>
 	<script src="{{asset('frontend/js/finalcountdown.min.js')}}"></script>
-	<script src="{{asset('frontend/js/nicesellect.js')}}"></script>
+	<!-- <script src="{{asset('frontend/js/nicesellect.js')}}"></script> -->
 	<script src="{{asset('frontend/js/flex-slider.js')}}"></script>
 	<script src="{{asset('frontend/js/scrollup.js')}}"></script>
 	<script src="{{asset('frontend/js/onepage-nav.min.js')}}"></script>

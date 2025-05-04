@@ -139,8 +139,10 @@
                                 @endif
                                 <li class="list-inline-item"><i class="ti-power-off"></i> <a href="{{ route('user.logout') }}">@lang('home.logout')</a></li>
                             @else
-                                <li class="list-inline-item"><i class="ti-power-off"></i>
-                                    <a href="{{ route('login.form') }}">@lang('home.login')</a> / 
+                                <li class="list-inline-item">
+                                    <a href="{{ route('login.form') }}">
+                                     <img src="{{ asset('images/profile.png') }}" class="icon-img me-3" alt="Login">
+                                        @lang('home.login')</a> / 
                                     <a href="{{ route('register.form') }}">@lang('home.register')</a>
                                 </li>
                             @endauth

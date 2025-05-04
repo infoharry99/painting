@@ -6,7 +6,74 @@
     .sc-button-group .sc-button-download .soundHeader{ 
         display:none !important;
     }
-    
+    .controls-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .media-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .media-buttons button {
+        padding: 8px;
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    .progress-bar {
+        flex-grow: 1;
+        height: 6px;
+        background-color: #777;
+        border-radius: 3px;
+        position: relative;
+        margin: 0 20px;
+    }
+
+    .progress-fill {
+        position: absolute;
+        height: 100%;
+        background-color: #c0392b;
+        width: 50%; /* Set dynamically with JS if needed */
+        border-radius: 3px;
+    }
+
+    .progress-thumb {
+        position: absolute;
+        top: 50%;
+        left: 50%; /* center by default */
+        transform: translate(-50%, -50%);
+        width: 16px;
+        height: 16px;
+        background-color: #c0392b;
+        border-radius: 50%;
+    }
+
+    .buy-print-btn {
+        border: 1px solid #c0392b;
+        color: #c0392b;
+        background-color: transparent;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .buy-print-btn .arrow {
+        font-size: 16px;
+    }
+    .social-links ul li a {
+        width: 30px !important;
+        height: 36px !important;
+    }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOM8z4+2e5c7e5a5b5e5a5b5e5a5b5e5a5b5e5" crossorigin="anonymous" />
     <script src="https://w.soundcloud.com/player/api.js"></script>
@@ -45,7 +112,7 @@
                             alt="Play Song"
                             style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; cursor: pointer; z-index: 2;">
                         <a>
-                            <iframe
+                        <iframe
                             id="sc-player"
                             width="100%"
                             height="80"
@@ -56,28 +123,27 @@
                             style="z-index: 1; position: relative;">
                         </iframe>
                     </div>
-                   {{-- <div style="margin-top: 10px;">
-                        <button id="playBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
-                            <img id="playIcon" src="{{ asset('images/Prplay.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Play
-                        </button>
+                    <div class="controls-container">
+                        <div class="media-buttons">
+                            <button id="playBtn">
+                                <img  id="playIcon" src="{{ asset('images/Prplay.png') }}" alt="Play" style="width: 20px;">
+                            </button>
+                            <button id="pauseBtn">
+                                <img  id="pauseIcon" src="{{ asset('images/play.png') }}" alt="Pause" style="width: 20px;">
+                            </button>
+                        </div>
 
-                        <button id="pauseBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
-                            <img id="pauseIcon" src="{{ asset('images/play.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Pause
-                        </button>
-                    </div> --}}
-                    <div style="margin-top: 10px;">
-                        <button id="playBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
-                            <img id="playIcon" src="{{ asset('images/Prplay.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Play
-                        </button>
-
-                        <button id="pauseBtn" style="padding: 8px 16px; margin-right: 5px; color: black; border: none;">
-                            <img id="pauseIcon" src="{{ asset('images/play.png') }}" alt="" style="width: 20px; vertical-align: middle;"> Pause
-                        </button>
+                        <!-- <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                            <div class="progress-thumb"></div>
+                        </div> -->
+                        <a herf="{{ route('product-detail', $product_play->slug) }}">
+                            <button class="buy-print-btn">
+                                <span class="arrow">›</span> Interested to Buy Print
+                            </button>
+                        </a>
                     </div>
                </div>
-
-
-              
 
                <div class="lyrics-area mt-5">
                    <div class="row">
@@ -104,12 +170,29 @@
 
                <div class="product-play-share mt-5">
                    <div class="social-links">
-                    {{-- <div> --}}
-                       <ul >
-                           <a href="" style="display: flex; gap:20px;">
-                            <li><button><img src="{{asset('images/chat.png')}}" class="img-fluid"><span> 120</span></button></li>
-                           <li><button><img src="{{asset('images/heart.png')}}" class="img-fluid"> <span> 89</span></button></li>
-                           </a>
+                       <ul>
+                            <li>
+                                <form method="POST" action="{{ route('product.like', $product_play->id) }}" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="hearts">
+                                            @if($product_play->likes->contains('user_id', auth()->id()))
+                                              <img src="{{ asset('images/heart.png') }}" alt="">
+                                            @else
+                                                <img src="{{ asset('images/heart.png') }}" alt="">
+                                            @endif
+                                            {{ $product_play->likes->count() }}
+                                        </button>
+                                    </form>
+                            </li>
+                            <li>
+                                <a href="{{ route('product.comment.page', $product_play->id) }}" class="comment" style="text-decoration: none;">
+                                    <button class="comment">
+                                        <img src="{{ asset('images/chat.png') }}" alt="">
+                                    </button>
+                                </a>
+                                
+                            </li>
+                            <span >{{ $product_play->comments->count() }}</span>
                            <li><a href=""><img src="{{asset('images/facebook.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/instra.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/pin.png')}}" class="img-fluid"></a></li>
@@ -125,97 +208,89 @@
                </div>
 
                <div class="related-product mt-5">
-                <h3 class="mb-3">Related Product</h3>
-                <div class="featured-slider owl-carousel">
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
+                    <h3 class="mb-3">Related Product</h3>
+                    <div class="featured-slider owl-carousel">
+                        <div class="featured-item">
+                            <a href="#">
+                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
+                                <div class="featured-content">
+                                    <h5>Title Title Title Title</h5>
+                                    <span><strong>Code: HF4328754</strong></span>
+                                    <p>Size: 36 X 36 in </p>
+                                    <p>Medium: Water Colour</p>
+                                </div>
+                            </a>
+                            <div class="featured-attribute mt-3">
+                                <button class="hearts"><i class="far fa-heart"></i>120</button>
+                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                            </div>
                         </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
+                        <div class="featured-item">
+                            <a href="#">
+                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
+                                <div class="featured-content">
+                                    <h5>Title Title Title Title</h5>
+                                    <span><strong>Code: HF4328754</strong></span>
+                                    <p>Size: 36 X 36 in </p>
+                                    <p>Medium: Water Colour</p>
+                                </div>
+                            </a>
+                            <div class="featured-attribute mt-3">
+                                <button class="hearts"><i class="far fa-heart"></i>120</button>
+                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                            </div>
+                        </div>
+                        <div class="featured-item">
+                            <a href="#">
+                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
+                                <div class="featured-content">
+                                    <h5>Title Title Title Title</h5>
+                                    <span><strong>Code: HF4328754</strong></span>
+                                    <p>Size: 36 X 36 in </p>
+                                    <p>Medium: Water Colour</p>
+                                </div>
+                            </a>
+                            <div class="featured-attribute mt-3">
+                                <button class="hearts"><i class="far fa-heart"></i>120</button>
+                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                            </div>
+                        </div>
+                        <div class="featured-item">
+                            <a href="#">
+                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
+                                <div class="featured-content">
+                                    <h5>Title Title Title Title</h5>
+                                    <span><strong>Code: HF4328754</strong></span>
+                                    <p>Size: 36 X 36 in </p>
+                                    <p>Medium: Water Colour</p>
+                                </div>
+                            </a>
+                            <div class="featured-attribute mt-3">
+                                <button class="hearts"><i class="far fa-heart"></i>120</button>
+                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                            </div>
+                        </div>
+                        <div class="featured-item">
+                            <a href="#">
+                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
+                                <div class="featured-content">
+                                    <h5>Title Title Title Title</h5>
+                                    <span><strong>Code: HF4328754</strong></span>
+                                    <p>Size: 36 X 36 in </p>
+                                    <p>Medium: Water Colour</p>
+                                </div>
+                            </a>
+                            <div class="featured-attribute mt-3">
+                                <button class="hearts"><i class="far fa-heart"></i>120</button>
+                                <button class="comment"><i class="far fa-comment"></i>89</button>
+                            </div>
+                        </div>                                                                
                 </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>                                                                
-               </div>
                </div>
            </div>
        </div>
    </section>
    <!-- product play sec end -->
-
-
-
-
-
-
-
-
   @endsection
   
 <script>
@@ -245,7 +320,26 @@
     //         pauseIcon.src = "{{ asset('images/Prplay.png') }}"; 
     //     });
     // });
-      document.addEventListener("DOMContentLoaded", function () {
+    //   document.addEventListener("DOMContentLoaded", function () {
+    //     const iframeElement = document.getElementById('sc-player');
+    //     const widget = SC.Widget(iframeElement);
+
+    //     const playBtn = document.getElementById('playBtn');
+    //     const pauseBtn = document.getElementById('pauseBtn');
+    //     const playIcon = document.getElementById('playIcon');
+    //     const pauseIcon = document.getElementById('pauseIcon');
+
+    //     playBtn.addEventListener('click', function () {
+    //         widget.play();
+    //         playIcon.src = "{{ asset('images/Vector.png') }}"; // Change play button to pause icon
+    //     });
+
+    //     pauseBtn.addEventListener('click', function () {
+    //         widget.pause();
+    //         playIcon.src = "{{ asset('images/Prplay.png') }}"; // Change play button back to play icon
+    //     });
+    // });
+    document.addEventListener("DOMContentLoaded", function () {
         const iframeElement = document.getElementById('sc-player');
         const widget = SC.Widget(iframeElement);
 
@@ -256,12 +350,19 @@
 
         playBtn.addEventListener('click', function () {
             widget.play();
-            playIcon.src = "{{ asset('images/Vector.png') }}"; // Change play button to pause icon
+            playIcon.src = "{{ asset('images/Vector.png') }}"; 
         });
 
         pauseBtn.addEventListener('click', function () {
             widget.pause();
-            playIcon.src = "{{ asset('images/Prplay.png') }}"; // Change play button back to play icon
+            playIcon.src = "{{ asset('images/Prplay.png') }}"; 
+            window.onload = function () {
+                setTimeout(function () {
+                    widget.play();
+                    playIcon.src = "{{ asset('images/Vector.png') }}";
+                }, 10000); 
+            };
         });
     });
-</script>
+
+    </script>   

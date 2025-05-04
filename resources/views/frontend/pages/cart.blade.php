@@ -412,12 +412,12 @@
 	</style>
 @endpush
 @push('scripts')
-	<script src="{{asset('frontend/js/nice-select/js/jquery.nice-select.min.js')}}"></script>
+	<!-- <script src="{{asset('frontend/js/nice-select/js/jquery.nice-select.min.js')}}"></script> -->
 	<script src="{{ asset('frontend/js/select2/js/select2.min.js') }}"></script>
 	<script>
-		$(document).ready(function() { $("select.select2").select2(); });
-  		$('select.nice-select').niceSelect();
-	</script>
+	// 	$(document).ready(function() { $("select.select2").select2(); });
+  	// 	$('select.nice-select').niceSelect();
+	 </script>
 	<script>
 		$(document).ready(function(){
 			$('.shipping select[name=shipping]').change(function(){

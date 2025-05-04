@@ -48,25 +48,15 @@
 @endif
 <div class="swiper mySwiper">
   <div class="swiper-wrapper">
-    {{-- @foreach($banners as $banner) --}}
+     @foreach($banners as $banner)
     <div class="swiper-slide" style="position: relative;">
-      <img src="/images/banner.png" alt="Banner Image" style="width: 100%; height: 100vh; object-fit: cover;">
+      <img src="{{ $banner->photo }}" alt="Banner Image" style="width: 100%; height: 100vh; object-fit: cover;">
     <div style="position: absolute; top: 50%; left: 40px; transform: translateY(-50%); color: white; max-width: 600px;">
-       <h1 style="font-size: 3.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 0.5rem;color: white">Lorem Ipsum is</h1>
-       <p style="font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;color: white">dummy text of the printing <br> and type setting industry.</p>
-       <p style="font-size: 1rem; font-weight: 300; max-width: 24rem;color: white">dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever</p>
+       <h1 style="font-size: 3.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 0.5rem;color: white">{{ $banner->title }}</h1>
+       <p style="font-size: 1rem; font-weight: 300; max-width: 24rem;color: white">{!! html_entity_decode($banner->description) !!}</p>
     </div>
     </div>
-
-    <div class="swiper-slide" style="position: relative;">
-      <img src="/images/product-img.png" alt="Banner Image" style="width: 100%; height: 100vh; object-fit: cover;">
-    <div style="position: absolute; top: 50%; left: 40px; transform: translateY(-50%); color: white; max-width: 600px;">
-        <h1 style="font-size: 3.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 0.5rem;color: white">Lorem Ipsum is</h1>
-        <p style="font-size: 2rem; font-weight: 400; margin-bottom: 0.5rem;color: white">dummy text of the printing <br> and type setting industry.</p>
-        <p style="font-size: 1rem; font-weight: 300; max-width: 24rem;color: white">dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever</p>
-    </div>
-    </div>
-    {{-- @endforeach --}}
+     @endforeach 
   </div>
 
   <!-- Add Pagination -->
@@ -103,7 +93,7 @@
                        <p> dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
                        <p class="mb-5">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
 
-                       <a href="#" class="theme-btn"><span><i class="fas fa-angle-right"></i></span> Read More</a>
+                       <a href="{{route('about-us')}}" class="theme-btn"><span><i class="fas fa-angle-right"></i></span> Read More</a>
                    </div>
                </div>
            </div>
@@ -126,10 +116,10 @@
                     @if($featured)
                         @foreach($featured as $data)
                             <div class="featured-item">
-                                <a href="#">
+                                <a href="{{ route('product-play', $data->slug) }}">
                                     <div class="featured-img">
                                         @php
-                                            $photos = json_decode($data->photo); // Properly decode JSON array
+                                            $photos = json_decode($data->photo);
                                         @endphp
                                         @if(!empty($photos) && isset($photos[0]))
                                             <img src="{{ asset($photos[0]) }}" alt="Featured Image" class="img-fluid">
@@ -138,7 +128,7 @@
                                     </div>
                                     <div class="featured-content">
                                         <h3>{{$data->title}} </h3>
-                                        <a href="{{route('product-detail',$data->slug)}}">Shop Now</a>
+                                        <!-- <a href="{)}}">Shop Now</a> -->
                                     </div>
                                 </a>
                                 <div class="featured-attribute mt-3">
@@ -156,7 +146,9 @@
 
                                     <!-- Comment Count Button -->
                                     <button class="comment">
-                                        <i class="far fa-comment"></i> {{ $data->comments->count() }}
+                                        <a href="{{ route('product.comment.page', $data->id) }}" class="comment" style="text-decoration: none;">
+                                            <i class="far fa-comment"></i> {{ $data->comments->count() }}
+                                        </a>
                                     </button>
                                 </div>
                             </div>
@@ -188,19 +180,17 @@
                     @endphp                  
                     @foreach($product_listss as $product)
                         <div class="featured-item">
-                            <a href="#">
+                            <a href="{{ route('product-play', $product->slug) }}">
                                 <div class="featured-img">
                                     @php
-                                        $photos = json_decode($product->photo); // Use $product instead of $data
+                                        $photos = json_decode($product->photo);
                                     @endphp
                                     @if(!empty($photos) && isset($photos[0]))
                                         <img src="{{ asset($photos[0]) }}" alt="Featured Image" class="img-fluid">
                                     @endif
                                 </div>
                                 <div class="featured-content">
-                                    <h4 class="title">
-                                        <a href="#">{{ $product->title }}</a>
-                                    </h4>
+                                    <h4 class="title">{{ $product->title }}</h4>
                                     <p class="price with-discount">${{ number_format($product->discount, 2) }}</p>
                                 </div>
                             </a>
@@ -222,10 +212,6 @@
                                         <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
                                             <i class="far fa-comment"></i> {{ $product->comments->count() }}
                                         </a>
-                                        <!-- <i class="far fa-comment"></i> {{ $product->comments->count() }} -->
-                                        <!-- <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
-                                            <i class="far fa-comment"></i> {{ $product->comments->count() }}
-                                        </a> -->
                                     </button>
                             </div>
                         </div>
@@ -250,8 +236,50 @@
   
    <!-- popular sec end -->
 
+    @php
+        $testmonial_listss = DB::table('testmonial')->orderBy('id','DESC')->get();
+    @endphp
    <!-- testimonial sec start -->
     <section class="testimonial-sec sectionpadding">
+        <div class="container">
+
+            <div class="row">
+            <div class="col-lg-2"></div>
+                <div class="col-lg-10">
+                    <div class="section-heading position-relative">
+                        <h3 class="mb-5">@lang('home.testimonial')</h3>
+                    </div>
+                    </div>
+                    <div class="testimonial-area owl-carousel">
+                    @foreach($testmonial_listss as $testmonials)
+                        <div class="testi-item">
+                            <div class="row">
+                                <div class="col-lg-2">
+                                    <div class="testi-img">
+                                        <img src="images/image 10.png" class="img-fluid">
+                                    </div>
+                                </div>
+                                <div class="col-lg-9">
+                                <div class="tesimonial-content">
+                                <p>{!!$testmonials->description!!}</p>
+                                </div>                                   
+                                </div>
+                                <div class="col-lg-9">
+                                </div>
+                                <div class="col-lg-3">
+                                <div class="test-hed mt-4">
+                                    <h6><strong>{{$testmonials->name}}</strong></h6>
+                                    <p>Desinassion</p>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach                                                                                                               
+                    </div>
+            </div>
+        </div>
+    </section>
+    <!-- <section class="testimonial-sec sectionpadding">
        <div class="container">
            <div class="row">
             <div class="col-lg-2"></div>
@@ -269,8 +297,22 @@
                                    </div>
                                </div>
                                <div class="col-lg-9">
-                               <div class="tesimonial-content">
-                                   <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
+                                <div class="tesimonial-content">
+                                   <p>
+                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                                        It has survived not only five centuries, but also the leap into electronic typesetting, 
+                                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets 
+                                        containing Lorem Ipsum passages, and more recently with desktop publishing software 
+                                        like Aldus PageMaker including versions of Lorem Ipsum Lorem Ipsum is simply dummy text of 
+                                        the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy 
+                                        text ever since the 1500s, when an unknown printer took a galley of type and scrambled 
+                                        it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic 
+                                        typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of 
+                                        Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software 
+                                        like Aldus PageMaker including versions of Lorem Ipsum
+                                    </p>
                                </div>                                   
                                </div>
                                <div class="col-lg-9">
@@ -287,7 +329,7 @@
                    </div>
               </div>
        </div>
-   </section>
+   </section> -->
    <!-- testimonial sec end -->
 
      <!-- blog sec start -->

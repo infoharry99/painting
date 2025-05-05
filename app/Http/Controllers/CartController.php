@@ -59,8 +59,6 @@ class CartController extends Controller
             'slug'      =>  'required',
             'quant'      =>  'required',
         ]);
-        // dd($request->quant[1]);
-
 
         $product = Product::where('slug', $request->slug)->first();
         if($product->stock <$request->quant[1]){

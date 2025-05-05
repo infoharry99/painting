@@ -94,7 +94,6 @@ class OrderController extends Controller
         $order_data['user_id']=$request->user()->id;
         $order_data['shipping_id']=$request->shipping;
         $shipping=Shipping::where('id',$order_data['shipping_id'])->pluck('price');
-        // return session('coupon')['value'];
         $order_data['sub_total']=Helper::totalCartPrice();
         $order_data['quantity']=Helper::cartCount();
         if(session('coupon')){
@@ -116,7 +115,6 @@ class OrderController extends Controller
                 $order_data['total_amount']=Helper::totalCartPrice();
             }
         }
-        // return $order_data['total_amount'];
         $order_data['status']="new";
         if(request('payment_method')=='paypal'){
             $order_data['payment_method']='paypal';
@@ -129,14 +127,13 @@ class OrderController extends Controller
         $order->fill($order_data);
         $status=$order->save();
         if($order)
-        // dd($order->id);
-        $users=User::where('role','admin')->first();
-        $details=[
-            'title'=>'New order created',
-            'actionURL'=>route('order.show',$order->id),
-            'fas'=>'fa-file-alt'
-        ];
-        Notification::send($users, new StatusNotification($details));
+            $users=User::where('role','admin')->first();
+            $details=[
+                'title'=>'New order created',
+                'actionURL'=>route('order.show',$order->id),
+                'fas'=>'fa-file-alt'
+            ];
+            Notification::send($users, new StatusNotification($details));
         if(request('payment_method')=='paypal'){
             return redirect()->route('payment')->with(['id'=>$order->id]);
         }

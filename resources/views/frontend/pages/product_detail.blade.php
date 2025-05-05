@@ -4,10 +4,10 @@
 @section('title','E-Paninting || HOME PAGE')
 @section('main-content')
 <style>
-.owl-carousel{
-    display: flex;
-	
-}
+    .owl-carousel{
+        display: flex;
+        
+    }
 
      .dropdown {
             border-radius: 10px;
@@ -62,7 +62,7 @@
 	</style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
         // Select elements
         const currencyDropdown = document.getElementById('currencyDropdown');
         const priceText = document.getElementById('priceText');
@@ -124,7 +124,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
         <!-- subbanner sec start -->
     <section class="subbanner-sec sectionpadding">
         <div class="container">
@@ -173,8 +172,23 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div>
                            <div class="social-links">
                                <ul>
-                                   <li><button><img src="{{asset('images/heart.png')}}" class="img-fluid"> <span> 89</span></button></li>
-                                   <li><button><img src="{{asset('images/chat.png')}}" class="img-fluid"><span> 120</span></button></li>
+                                   <li>
+                                    <form method="POST" action="{{ route('product.like', $product_detail->id) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="hearts">
+                                        @if($product_detail->likes->contains('user_id', auth()->id()))
+                                            <i class="fas fa-heart"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
+                                        {{ $product_detail->likes->count() }}
+                                    </button>
+                                </form></li>
+                                   <li><button class="comment">
+                                    <a href="{{ route('product.comment.page', $product_detail->id) }}" class="comment" style="text-decoration: none;">
+                                        <i class="far fa-comment"></i> {{ $product_detail->comments->count() }}
+                                    </a>
+                                </button></li>
                                </ul>
                            </div>
 
@@ -237,21 +251,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </div>
 
-<!-- Price display -->
-<div class="cost-area" style="margin-top: 10px;">
-        <p><strong>Cost</strong> (Including Shipping):</p>
-        <h3 id="priceText"></h3> <!-- Price will update here -->
-</div>
+                <!-- Price display -->
+                <div class="cost-area" style="margin-top: 10px;">
+                        <p><strong>Cost</strong> (Including Shipping):</p>
+                        <h3 id="priceText"></h3>
+                </div>
 
 
 
-{{-- <div>
-    <div class="cost-area" style="margin-top: 10px;">
-        <p><strong>Cost</strong> (Including Shipping):</p>
-        <h3 id="priceText"></h3> <!-- Price will update here -->
-    </div>
-</div> --}}
-                            </div>
+                {{-- <div>
+                    <div class="cost-area" style="margin-top: 10px;">
+                        <p><strong>Cost</strong> (Including Shipping):</p>
+                        <h3 id="priceText"></h3> <!-- Price will update here -->
+                    </div>
+                </div> --}}
+                                            </div>
                             <div class="postcode-area">
                                 <!-- <div>
                                     <div class="country">
@@ -290,10 +304,9 @@ document.addEventListener("DOMContentLoaded", function () {
    </section>
    <!-- product-details sec end -->
 
-@php
-     $setting_data = DB::table('settings')->orderBy('id','DESC')->first();
-
- @endphp
+    @php
+        $setting_data = DB::table('settings')->orderBy('id','DESC')->first();
+    @endphp
 
 
    <!-- product description sec start -->
@@ -334,15 +347,15 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="col-lg-6 text-center fst-pt">
                 <div class="print-area">
                     <h3 class="mb-4">Print on Paper</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <a href="#" class="theme-btn1"><span><i class="fas fa-angle-right"></i></span> Read More</a>
+                    <p>{!! $setting_data->print_on_paper !!}</p>
+                <!-- <a href="#" class="theme-btn1"><span><i class="fas fa-angle-right"></i></span> Read More</a> -->
                 </div>
             </div>
             <div class="col-lg-6 text-center snd-pt">
                 <div class="print-area">
                     <h3 class="mb-4">Print on Canvas</h3>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p>
-                <a href="#" class="theme-btn1"><span><i class="fas fa-angle-right"></i></span> Read More</a>
+                <p>{!! $setting_data->print_on_canvas !!}</p>
+                <!-- <a href="#" class="theme-btn1"><span><i class="fas fa-angle-right"></i></span> Read More</a> -->
                 </div>
             </div>
            </div>
@@ -356,85 +369,52 @@ document.addEventListener("DOMContentLoaded", function () {
        <div class="container">
            <div class="row">
                <div class="col-lg-12">
-                <div class="related-product">
-                <h3 class="mb-3">Related Product</h3>
-                <div class="featured-slider owl-carousel">
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>
-                <div class="featured-item">
-                    <a href="#">
-                        <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                        <div class="featured-content">
-                            <h5>Title Title Title Title</h5>
-                            <span><strong>Code: HF4328754</strong></span>
-                            <p>Size: 36 X 36 in </p>
-                            <p>Medium: Water Colour</p>
-                        </div>
-                    </a>
-                      <div class="featured-attribute mt-3">
-                        <button class="hearts"><i class="far fa-heart"></i>120</button>
-                        <button class="comment"><i class="far fa-comment"></i>89</button>
-                      </div>
-                </div>                                                                
-               </div>
+                    <div class="related-product">
+                        <h3 class="mb-3">Related Product</h3>
+                        <div class="featured-slider owl-carousel">
+                            @php
+                                use App\Models\Product;
+                                $product_listss = Product::with(['likes', 'comments'])->where('status', 'active')->orderBy('id', 'DESC')->limit(6)->get();
+                            @endphp                  
+                            @foreach($product_listss as $product)
+                                <div class="featured-item">
+                                    <a href="{{ route('product-play', $product->slug) }}">
+                                        <div class="featured-img">
+                                            @php
+                                                $photos = json_decode($product->photo);
+                                            @endphp
+                                            @if(!empty($photos) && isset($photos[0]))
+                                                <img src="{{ asset($photos[0]) }}" alt="Featured Image" class="img-fluid">
+                                            @endif
+                                        </div>
+                                        <div class="featured-content">
+                                            <h4 class="title">{{ $product->title }}</h4>
+                                            <p class="price with-discount">${{ number_format($product->discount, 2) }}</p>
+                                        </div>
+                                    </a>
+                                    <div class="featured-attribute mt-3">
+                                        <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+                                            @csrf
+                                            <button type="submit" class="hearts">
+                                                @if($product->likes->contains('user_id', auth()->id()))
+                                                    <i class="fas fa-heart"></i>
+                                                @else
+                                                    <i class="far fa-heart"></i>
+                                                @endif
+                                                {{ $product->likes->count() }}
+                                            </button>
+                                        </form>
+
+                                        <!-- Comment Count Button -->
+                                        <button class="comment">
+                                            <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                                                <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                                            </a>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endforeach                                                              
+                    </div>
                </div>
                </div>
            </div>

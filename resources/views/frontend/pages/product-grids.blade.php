@@ -1,9 +1,8 @@
-
 @extends('frontend.layouts.master')
 @section('title','E-Paninting || HOME PAGE')
 @section('main-content')
     <!-- subbanner sec start -->
-    <section class="subbanner-sec sectionpadding">
+    {{-- <section class="subbanner-sec sectionpadding">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -16,6 +15,28 @@
                     <div class="section-heading">
                         <h3 class="mt-3">About The Paintings</h3>
                         <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> --}}
+    @php
+        $setting_data = DB::table('settings')->orderBy('id','DESC')->first();
+
+    @endphp
+    <section class="subbanner-sec sectionpadding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Gallery</li>
+                      </ol>
+                    </nav>
+                    <div class="section-heading">
+                        <h3 class="mt-3">About The Paintings</h3>
+                        <p>{!!$setting_data->about_paintings!!}</p>
                     </div>
                 </div>
             </div>
@@ -249,7 +270,7 @@
             </div>
         </div> --}}
 
-@php
+{{-- @php
     $featured = DB::table('products')
         ->where('is_featured', 1)
         ->where('status', 'active')
@@ -334,24 +355,236 @@
                     $image  = $photos[0] ?? '/placeholder.jpg';
                     $isTall = $index % 2 === 0; // even index = tall
                 @endphp
-
-                <div class="product-card">
-                    <a  href="{{ route('product-play', $product->slug) }}">
-                        <img src="{{ asset($image) }}" class="product-img {{ $isTall ? 'tall' : 'short' }}" alt="{{ $product->title }}">
-                    </a>
-                    <div class="product-info">
-                        <div class="title">{{ Str::limit($product->title, 40) }}</div>
-                        <div class="meta">Code: <strong>{{ $product->code ?? 'HF' . $product->id }}</strong></div>
-                        <div class="meta">Size: {{ $product->size ?? '36 x 36 in' }}</div>
-                        <div class="meta">Medium: {{ $product->medium ?? 'Water Colour' }}</div>
+                <a  href="{{ route('product-play', $product->slug) }}">
+                    <div class="product-card">
+                        
+                            <img src="{{ asset($image) }}" class="product-img {{ $isTall ? 'tall' : 'short' }}" alt="{{ $product->title }}">
+                    
+                        <div class="product-info">
+                            <div class="title">{{ Str::limit($product->title, 40) }}</div>
+                            <div class="meta">Code: <strong>{{ $product->code ?? 'HF' . $product->id }}</strong></div>
+                            <div class="meta">Size: {{ $product->size ?? '36 x 36 in' }}</div>
+                            <div class="meta">Medium: {{ $product->medium ?? 'Water Colour' }}</div>
+                        </div>
+                        <div class="reaction">
+                            <span><i class="far fa-heart"></i> 120</span>
+                            <span><i class="far fa-comment"></i> 89</span>
+                        </div>
+                        
                     </div>
-                    <div class="reaction">
-                        <span><i class="far fa-heart"></i> 120</span>
-                        <span><i class="far fa-comment"></i> 89</span>
-                    </div>
-                </div>
+                </a>
             @endforeach
-        </div>
+        </div> --}}
+{{-- 
+
+@php
+   
+    $featured = DB::table('products')
+        ->where('is_featured', 1)
+        ->where('status', 'active')
+        ->orderBy('id', 'DESC')
+        ->paginate(8);
+@endphp --}}
+
+@php
+use App\Models\Product;
+$featured = Product::with(['likes', 'comments'])->where('status', 'active')->orderBy('id', 'DESC')->paginate(8);
+                    @endphp
+
+<style>
+    .sectionpadding {
+    padding: 35px 0 !important;
+}
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+        max-width: 1400px;
+        margin: auto;
+        padding: 40px 40px 40px 60px;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .product-img {
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        border-radius: 8px;
+    }
+
+    .tall { height: 400px; }
+    .short { height: 280px; }
+
+    .product-info {
+        padding: 12px 10px;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .meta {
+        font-size: 13px;
+        color: #444;
+        margin-bottom: 2px;
+    }
+
+    .reaction {
+        display: flex;
+        gap: 12px;
+        padding: 8px 10px 12px;
+        font-size: 13px;
+        color: #666;
+    }
+
+    @media screen and (max-width: 1200px) {
+        .product-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media screen and (max-width: 900px) {
+        .product-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .product-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .custom-pagination {
+        padding: 30px 0;
+        text-align: center;
+    }
+
+    .custom-pagination ul {
+        display: inline-flex;
+        gap: 10px;
+        padding: 0;
+        list-style: none;
+        justify-content: center;
+    }
+
+    .custom-pagination li {
+        display: inline-block;
+    }
+
+    .custom-pagination a {
+        display: block;
+        padding: 6px 12px;
+        border-radius: 50%;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        border: 1px solid transparent;
+    }
+
+    .custom-pagination .active a {
+        border: 1px solid #ccc;
+        background: #f5f5f5;
+        font-weight: bold;
+    }
+
+    .custom-pagination .disabled a {
+        pointer-events: none;
+        color: #aaa;
+    }
+</style>
+
+<div class="product-grid">
+    @foreach ($featured as $index => $product)
+        @php
+            $photos = json_decode($product->photo);
+            $image  = $photos[0] ?? '/placeholder.jpg';
+            $isTall = $index % 2 === 0;
+        @endphp
+        
+            <div class="product-card">
+                <a href="{{ route('product-play', $product->slug) }}">
+                <img src="{{ asset($image) }}" class="product-img {{ $isTall ? 'tall' : 'short' }}" alt="{{ $product->title }}">
+                <div class="product-info">
+                    <div class="title">{{ Str::limit($product->title, 40) }}</div>
+                    <div class="meta">Code: <strong>{{ $product->code ?? 'HF' . $product->id }}</strong></div>
+                    <div class="meta">Size: {{ $product->size ?? '36 x 36 in' }}</div>
+                    <div class="meta">Medium: {{ $product->medium ?? 'Water Colour' }}</div>
+                </div>
+                 </a>
+                {{-- <div class="reaction">
+                                <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="hearts">
+                                        @if($product->likes->contains('user_id', auth()->id()))
+                                            <i class="fas fa-heart"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
+                                        {{ $product->likes->count() }}
+                                    </button>
+                                </form>
+
+                                <!-- Comment Count Button -->
+                    <button class="comment">
+                    <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                        <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                    </a>
+                    </button>
+                </div> --}}
+               <div class="reaction">
+    <!-- Like Button -->
+    <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+        @csrf
+        <button type="submit" class="hearts" style="background-color: white; border:none;">
+            <i class="{{ $product->likes->contains('user_id', auth()->id()) ? 'fas fa-heart' : 'far fa-heart' }}"></i>
+            <span>{{ $product->likes->count() }}</span>
+        </button>
+    </form>
+
+    <!-- Comment Count Button -->
+    <button class="comment"  style="background-color: white; border:none;">
+        <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+            <i class="far fa-comment"></i> <span>{{ $product->comments->count() }}</span>
+        </a>
+    </button>
+</div>
+
+            </div>
+       
+    @endforeach
+</div>
+
+{{-- Pagination --}}
+@if ($featured->hasPages())
+    <div class="custom-pagination">
+        <ul>
+            {{-- Previous --}}
+            <li class="{{ $featured->onFirstPage() ? 'disabled' : '' }}">
+                <a href="{{ $featured->previousPageUrl() }}" rel="prev">&lsaquo;</a>
+            </li>
+
+            {{-- Page Numbers --}}
+            @foreach ($featured->getUrlRange(1, $featured->lastPage()) as $page => $url)
+                <li class="{{ $featured->currentPage() == $page ? 'active' : '' }}">
+                    <a href="{{ $url }}">{{ $page }}</a>
+                </li>
+            @endforeach
+
+            {{-- Next --}}
+            <li class="{{ !$featured->hasMorePages() ? 'disabled' : '' }}">
+                <a href="{{ $featured->nextPageUrl() }}" rel="next">&rsaquo;</a>
+            </li>
+        </ul>
+    </div>
+@endif
 
 
 

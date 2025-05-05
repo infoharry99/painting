@@ -54,6 +54,29 @@
         </div>
 
         <div class="form-group">
+          <label for="about_paintings" class="col-form-label">About Paintings <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="about_paintings" name="about_paintings">{{$data->about_paintings}}</textarea>
+          @error('about_paintings')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="print_on_paper" class="col-form-label"> Print On Paper <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="print_on_paper" name="print_on_paper">{{$data->print_on_paper}}</textarea>
+          @error('print_on_paper')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
+          <label for="print_on_canvas" class="col-form-label">Print On Canvas <span class="text-danger">*</span></label>
+          <textarea class="form-control" id="print_on_canvas" name="print_on_canvas">{{$data->print_on_canvas}}</textarea>
+          @error('print_on_canvas')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+        <div class="form-group">
           <label for="inputPhoto" class="col-form-label">Logo <span class="text-danger">*</span></label>
           <div class="input-group">
               <span class="input-group-btn">
@@ -177,6 +200,27 @@
     $(document).ready(function() {
       $('#return').summernote({
         placeholder: "Write detail return.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#print_on_canvas').summernote({
+        placeholder: "Write detail print_on_canvas.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#print_on_paper').summernote({
+        placeholder: "Write detail print_on_paper.....",
+          tabsize: 2,
+          height: 150
+      });
+    });
+    $(document).ready(function() {
+      $('#about_paintings').summernote({
+        placeholder: "Write detail about_paintings.....",
           tabsize: 2,
           height: 150
       });

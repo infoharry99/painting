@@ -170,10 +170,6 @@
                 </div>
             </div>
                <div class="featured-slider owl-carousel">
-                    <!-- @php
-                        $product_listss = DB::table('products')->where('status','active')->orderBy('id','DESC')->limit(6)->get();
-                    @endphp -->
-
                     @php
                         use App\Models\Product;
                         $product_listss = Product::with(['likes', 'comments'])->where('status', 'active')->orderBy('id', 'DESC')->limit(6)->get();
@@ -195,39 +191,26 @@
                                 </div>
                             </a>
                             <div class="featured-attribute mt-3">
-                                    <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
-                                        @csrf
-                                        <button type="submit" class="hearts">
-                                            @if($product->likes->contains('user_id', auth()->id()))
-                                                <i class="fas fa-heart"></i>
-                                            @else
-                                                <i class="far fa-heart"></i>
-                                            @endif
-                                            {{ $product->likes->count() }}
-                                        </button>
-                                    </form>
-
-                                    <!-- Comment Count Button -->
-                                    <button class="comment">
-                                        <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
-                                            <i class="far fa-comment"></i> {{ $product->comments->count() }}
-                                        </a>
+                                <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+                                    @csrf
+                                    <button type="submit" class="hearts">
+                                        @if($product->likes->contains('user_id', auth()->id()))
+                                            <i class="fas fa-heart"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
+                                        {{ $product->likes->count() }}
                                     </button>
+                                </form>
+
+                                <!-- Comment Count Button -->
+                                <button class="comment">
+                                    <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                                        <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                                    </a>
+                                </button>
                             </div>
                         </div>
-                        <!-- <form method="POST" action="{{ route('product.comment', $product->id) }}">
-                            @csrf
-                            <textarea name="comment" placeholder="Write a comment..." required></textarea>
-                            <button type="submit">Post</button>
-                        </form> -->
-
-                        <!-- Comment List -->
-                        <!-- @foreach($product->comments as $comment)
-                            <div>
-                                <strong>{{ $comment->user->name }}:</strong> 
-                                <p>{{ $comment->comment }}</p>
-                            </div>
-                        @endforeach -->
                     @endforeach                                                                            
                </div>
            </div>

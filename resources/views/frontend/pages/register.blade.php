@@ -138,7 +138,7 @@
 
 <!-- header sec start -->
 <div class="blog-header">
-    <a href="#"><img src="{{asset('images/x.png')}}" class="img-fluid"></a>
+    <a href="{{url('/')}}"><img src="{{asset('images/x.png')}}" class="img-fluid"></a>
 </div>
 <!-- header sec end -->
    

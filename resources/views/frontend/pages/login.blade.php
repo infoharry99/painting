@@ -240,7 +240,7 @@
 </head>
 <body id="inner-page">
 <div class="blog-header">
-    <a href="#"><img src="{{asset('images/x.png')}}" class="img-fluid"></a>
+    <a href="{{url('/')}}"><img src="{{asset('images/x.png')}}" class="img-fluid"></a>
 </div>
     <!-- signup sec start -->
     <section class="signup-sec padding-bottom sectionhalftop">
@@ -259,7 +259,6 @@
     				    <!-- <form class=""> -->
                         <form class="form signup-form" method="post" action="{{route('login.submit')}}">
                             @csrf
-    				    	<!-- <input type="text" placeholder="Email Address" name=""> -->
                             <label>Your Email<span>*</span></label>
                             <input type="email" name="email" placeholder="" required="required" value="{{old('email')}}">
                             @error('email')

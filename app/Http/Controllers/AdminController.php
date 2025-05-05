@@ -69,9 +69,7 @@ class AdminController extends Controller
             'phone'=>'required|string',
         ]);
         $data=$request->all();
-        // return $data;
         $settings=Settings::first();
-        // return $settings;
         $status=$settings->fill($data)->save();
         if($status){
             request()->session()->flash('success','Setting successfully updated');

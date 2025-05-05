@@ -139,7 +139,7 @@
                         </div> -->
                         <a herf="{{ route('product-detail', $product_play->slug) }}">
                             <button class="buy-print-btn">
-                                <span class="arrow">›</span> Interested to Buy Print
+                                <span class="arrow">›</span> Interested to Buy Painting
                             </button>
                         </a>
                     </div>
@@ -184,15 +184,14 @@
                                         </button>
                                     </form>
                             </li>
-                            <li>
+                            <li style="display: flex; gap:3px;">
                                 <a href="{{ route('product.comment.page', $product_play->id) }}" class="comment" style="text-decoration: none;">
                                     <button class="comment">
                                         <img src="{{ asset('images/chat.png') }}" alt="">
                                     </button>
                                 </a>
-                                
-                            </li>
-                            <span >{{ $product_play->comments->count() }}</span>
+                                <span >{{ $product_play->comments->count() }}</span> 
+                            </li>
                            <li><a href=""><img src="{{asset('images/facebook.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/instra.png')}}" class="img-fluid"></a></li>
                            <li><a href=""><img src="{{asset('images/pin.png')}}" class="img-fluid"></a></li>
@@ -210,82 +209,48 @@
                <div class="related-product mt-5">
                     <h3 class="mb-3">Related Product</h3>
                     <div class="featured-slider owl-carousel">
-                        <div class="featured-item">
-                            <a href="#">
-                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                                <div class="featured-content">
-                                    <h5>Title Title Title Title</h5>
-                                    <span><strong>Code: HF4328754</strong></span>
-                                    <p>Size: 36 X 36 in </p>
-                                    <p>Medium: Water Colour</p>
+                        @php
+                            use App\Models\Product;
+                            $product_listss = Product::with(['likes', 'comments'])->where('status', 'active')->orderBy('id', 'DESC')->limit(6)->get();
+                        @endphp                  
+                        @foreach($product_listss as $product)
+                            <div class="featured-item">
+                                <a href="{{ route('product-play', $product->slug) }}">
+                                    <div class="featured-img">
+                                        @php
+                                            $photos = json_decode($product->photo);
+                                        @endphp
+                                        @if(!empty($photos) && isset($photos[0]))
+                                            <img src="{{ asset($photos[0]) }}" alt="Featured Image" class="img-fluid">
+                                        @endif
+                                    </div>
+                                    <div class="featured-content">
+                                        <h4 class="title">{{ $product->title }}</h4>
+                                        <p class="price with-discount">${{ number_format($product->discount, 2) }}</p>
+                                    </div>
+                                </a>
+                                <div class="featured-attribute mt-3">
+                                    <form method="POST" action="{{ route('product.like', $product->id) }}" style="display:inline;">
+                                        @csrf
+                                        <button type="submit" class="hearts">
+                                            @if($product->likes->contains('user_id', auth()->id()))
+                                                <i class="fas fa-heart"></i>
+                                            @else
+                                                <i class="far fa-heart"></i>
+                                            @endif
+                                            {{ $product->likes->count() }}
+                                        </button>
+                                    </form>
+
+                                    <!-- Comment Count Button -->
+                                    <button class="comment">
+                                        <a href="{{ route('product.comment.page', $product->id) }}" class="comment" style="text-decoration: none;">
+                                            <i class="far fa-comment"></i> {{ $product->comments->count() }}
+                                        </a>
+                                    </button>
                                 </div>
-                            </a>
-                            <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
                             </div>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#">
-                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                                <div class="featured-content">
-                                    <h5>Title Title Title Title</h5>
-                                    <span><strong>Code: HF4328754</strong></span>
-                                    <p>Size: 36 X 36 in </p>
-                                    <p>Medium: Water Colour</p>
-                                </div>
-                            </a>
-                            <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
-                            </div>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#">
-                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                                <div class="featured-content">
-                                    <h5>Title Title Title Title</h5>
-                                    <span><strong>Code: HF4328754</strong></span>
-                                    <p>Size: 36 X 36 in </p>
-                                    <p>Medium: Water Colour</p>
-                                </div>
-                            </a>
-                            <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
-                            </div>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#">
-                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                                <div class="featured-content">
-                                    <h5>Title Title Title Title</h5>
-                                    <span><strong>Code: HF4328754</strong></span>
-                                    <p>Size: 36 X 36 in </p>
-                                    <p>Medium: Water Colour</p>
-                                </div>
-                            </a>
-                            <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
-                            </div>
-                        </div>
-                        <div class="featured-item">
-                            <a href="#">
-                                <div class="featured-img"><img src="{{asset('images/image 12.png')}}" class="img-fluid"></div>
-                                <div class="featured-content">
-                                    <h5>Title Title Title Title</h5>
-                                    <span><strong>Code: HF4328754</strong></span>
-                                    <p>Size: 36 X 36 in </p>
-                                    <p>Medium: Water Colour</p>
-                                </div>
-                            </a>
-                            <div class="featured-attribute mt-3">
-                                <button class="hearts"><i class="far fa-heart"></i>120</button>
-                                <button class="comment"><i class="far fa-comment"></i>89</button>
-                            </div>
-                        </div>                                                                
-                </div>
+                        @endforeach    
                </div>
            </div>
        </div>
